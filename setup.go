@@ -176,6 +176,8 @@ func parse(c *caddy.Controller) (*ACME, error) {
 		a.db, err = NewSQLiteDBWithROOption(dbPath, !apiEnabled)
 	case "badger":
 		a.db, err = NewBadgerDBWithROOption(dbPath, !apiEnabled)
+	case "memory":
+		a.db, err = NewMemDB()
 	default:
 		return nil, fmt.Errorf("unknown database type: %s", dbType)
 	}
@@ -188,9 +190,13 @@ func parse(c *caddy.Controller) (*ACME, error) {
 	if apiEnabled {
 		for _, account := range accounts {
 			// Hash the password for storage
-			passwordHash, err := bcrypt.GenerateFromPassword([]byte(account.Password), 10)
-			if err != nil {
-				return nil, fmt.Errorf("failed to hash password for account %s: %v", account.Username, err)
+			passwordHash := []byte(account.Password)
+			// Check if we already have a hashed password
+			if _, err := bcrypt.Cost([]byte(account.Password)); err != nil {
+				passwordHash, err = bcrypt.GenerateFromPassword(passwordHash, 10)
+				if err != nil {
+					return nil, fmt.Errorf("failed to hash password for account %s: %v", account.Username, err)
+				}
 			}
 
 			if err := a.db.RegisterAccount(account, passwordHash); err != nil {

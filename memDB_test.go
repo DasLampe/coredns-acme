@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewMemDB(t *testing.T) {
-	db := NewMemDB()
+	db, _ := NewMemDB()
 
 	if db == nil {
 		t.Error("NewMemDB() returned nil")
@@ -22,7 +22,7 @@ func TestNewMemDB(t *testing.T) {
 }
 
 func TestMemDB_RegisterAndGetAccount(t *testing.T) {
-	db := NewMemDB()
+	db, _ := NewMemDB()
 
 	testCases := []struct {
 		name            string
@@ -124,7 +124,7 @@ func TestMemDB_RegisterAndGetAccount(t *testing.T) {
 
 	// Test multiple zone matching (which one is longer)
 	t.Run("Multiple zones for same user", func(t *testing.T) {
-		db := NewMemDB()
+		db, _ := NewMemDB()
 
 		// Register two accounts with same username but different zones
 		acc1 := Account{
@@ -156,7 +156,7 @@ func TestMemDB_RegisterAndGetAccount(t *testing.T) {
 }
 
 func TestMemDB_PresentAndGetRecords(t *testing.T) {
-	db := NewMemDB()
+	db, _ := NewMemDB()
 
 	testCases := []struct {
 		name    string
@@ -243,7 +243,7 @@ func TestMemDB_PresentAndGetRecords(t *testing.T) {
 }
 
 func TestMemDB_CleanupRecord(t *testing.T) {
-	db := NewMemDB()
+	db, _ := NewMemDB()
 
 	// Set up test data
 	db.PresentRecord("cleanup.example.org.", "value1")
@@ -303,7 +303,7 @@ func TestMemDB_CleanupRecord(t *testing.T) {
 }
 
 func TestMemDB_Close(t *testing.T) {
-	db := NewMemDB()
+	db, _ := NewMemDB()
 
 	// Close should always return nil for memDB
 	err := db.Close()

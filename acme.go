@@ -5,6 +5,7 @@ package acme
 import (
 	"context"
 	"crypto/tls"
+	"errors"
 	"net"
 	"net/http"
 	"strings"
@@ -85,7 +86,7 @@ func (a *ACME) ServeDNS(ctx context.Context, w dns.ResponseWriter, r *dns.Msg) (
 	// Retrieve the record from the database
 	records, err := a.db.GetRecords(qname)
 	if err != nil {
-		if err == ErrRecordNotFound {
+		if errors.Is(err, ErrRecordNotFound) {
 			// Fall through to next plugin if no record found and fallthrough is enabled for this zone
 			if a.Fall.Through(qname) {
 				log.Debugf("No record found for %s, falling through to next plugin", qname)

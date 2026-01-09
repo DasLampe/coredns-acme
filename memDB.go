@@ -15,11 +15,11 @@ type MemDB struct {
 var _ DB = &MemDB{}
 
 // NewMemDB creates a new in-memory database
-func NewMemDB() *MemDB {
+func NewMemDB() (*MemDB, error) {
 	return &MemDB{
 		records:  make(map[string][]string),
 		accounts: make(map[string]Account),
-	}
+	}, nil
 }
 
 // Close does nothing for memory DB

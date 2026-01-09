@@ -1,6 +1,6 @@
-module github.com/ShrewdHydra/coredns-acme
+module github.com/DasLampe/coredns-acme
 
-go 1.23.0
+go 1.25.0
 
 require (
 	github.com/coredns/caddy v1.1.1
