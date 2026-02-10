@@ -109,9 +109,10 @@ func (s *SQLiteDB) RegisterAccount(a Account, passwordHash []byte) error {
 	if s.readOnly {
 		return ErrReadOnlyDatabase
 	}
-	_, err := s.Exec("INSERT INTO accounts (username, password, zone, allowfrom) VALUES (?, ?, ?, ?)",
+	_, err := s.Exec("REPLACE INTO accounts (username, password, zone, allowfrom) VALUES (?, ?, ?, ?)",
 		a.Username, passwordHash, a.Zone, a.AllowedIPs.String())
 	if err != nil {
+		log.Errorf("Failed to insert account: %v. Username: %s; Zone: %s", err, a.Username, a.Zone)
 		return err
 	}
 
